@@ -1,0 +1,22 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Simulateur TCG – Frères Mario</title>
+<style>
+:root{--bg:#14101f;--pan:#201a33;--or:#ff7a0f;--pk:#ff12e8;--tx:#f4efff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 Georgia,serif}
+#top{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:8px 14px;background:var(--pan);border-bottom:3px solid var(--or)}
+#msg{flex:1;min-width:200px;color:#ffd9a8}button{font:inherit;font-weight:bold;background:var(--or);border:0;border-radius:8px;padding:7px 14px;cursor:pointer}
+button:disabled{opacity:.4}#main{display:flex;gap:12px;padding:10px;flex-wrap:wrap}#board{flex:1;min-width:320px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}.row.one{grid-template-columns:1fr}
+.z{background:var(--pan);border:2px solid #3a3060;border-radius:10px;padding:6px;min-height:150px;position:relative}
+.z.hl{border-color:var(--pk);cursor:pointer}.z h4{margin:0 0 4px;font-size:12px;color:#b9a9e8}
+.cs{display:flex;gap:6px;flex-wrap:wrap}.c{position:relative;width:76px;cursor:pointer;border-radius:6px}.c img{width:100%;display:block;border-radius:6px}
+.c.t{transform:rotate(8deg);opacity:.7}.c.foe{outline:2px solid #6a5acd}.c.sel{outline:3px solid var(--pk)}.c.tg{outline:3px dashed #ffd400}
+.c b{position:absolute;right:-4px;bottom:-4px;background:#fff;color:#000;border-radius:50%;min-width:26px;height:26px;text-align:center;line-height:26px;font-size:15px}
+.c u{position:absolute;left:-4px;top:-4px;background:#fff;color:#000;border-radius:50%;min-width:24px;height:24px;text-align:center;line-height:24px;font-size:14px;text-decoration:none}
+.c i{position:absolute;left:2px;bottom:2px;font-size:11px;background:#000a;padding:0 4px;border-radius:4px;font-style:normal}
+#hand .c{width:96px}.c.dim img{filter:grayscale(.9) brightness(.6)}.lieu{width:64px}
+#log{width:260px;max-height:70vh;overflow:auto;background:var(--pan);border-radius:10px;padding:8px;font-size:13px}#log div{margin-bottom:3px}
+</style></head><body>
+<div id="top"><b id="st"></b><span id="msg"></span><button id="val" hidden>Valider le combat</button><button id="end">Fin du tour</button><button id="new">Nouvelle partie</button></div>
+<div id="main"><div id="board"></div><div id="log"></div></div>
+<script type="module" src="src/main.js"></script></body></html>
