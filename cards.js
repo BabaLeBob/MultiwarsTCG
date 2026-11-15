@@ -1,4 +1,4 @@
-{
+const CARDS={
 "mario_t":{"name":"Mario","type":"trans","pv":20,"fam":["Royaume Champignon","Héros","Frère Mario"],"img":"001_Mario.png","text":"Victoire : PV adverses à 0 ou 5 Lieux conquis."},
 "mario":{"name":"Mario","type":"perso","cost":6,"power":5,"fam":["Royaume Champignon","Héros","Frère Mario"],"img":"002_Mario.png","fx":{"equipTop":3}},
 "luigi":{"name":"Luigi","type":"perso","cost":3,"power":4,"fam":["Royaume Champignon","Frère Mario"],"img":"005_Luigi.png","fx":{"draw":1}},
@@ -15,3 +15,4 @@
 "galaxy":{"name":"Galaxy","type":"lieu","cost":2,"fam":["Espace"],"img":"009_galaxy.png","conq":{"turns":5},"draw":2,"start":"galaxy"},
 "ile":{"name":"Île des Yoshi","type":"lieu","cost":4,"fam":["Île des Yoshi"],"img":"015_Ile_Yoshi.png","conq":{"units":5},"draw":3}
 }
+;

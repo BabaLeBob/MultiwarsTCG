@@ -1,24 +1,25 @@
-// Moteur pur : l'état est un JSON, act(état, action) -> {s} ou {err}. Aucune dépendance à l'UI.
-let D={};export const setDefs=d=>D=d;export const defs=()=>D;
+// Script classique (pas de module) : fonctionne en file:// comme sur GitHub Pages.
+const E=(()=>{// Moteur pur : l'état est un JSON, act(état, action) -> {s} ou {err}. Aucune dépendance à l'UI.
+let D={};const setDefs=d=>D=d;const defs=()=>D;
 const shuf=a=>{for(let i=a.length;--i>0;){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const mk=(s,id,o)=>({uid:s.uid++,id,owner:o,tapped:false,eq:[],tmp:0,mt:false});
 const rm=(a,x)=>a.splice(a.indexOf(x),1);
 const nm=p=>p?'IA':'Toi';
 const log=(s,t)=>{s.log.push(t);if(s.log.length>40)s.log.shift()};
-export const all=(s,p)=>Object.values(s.Z).flat().filter(u=>p==null||u.owner==p);
-export const where=(s,u)=>Object.keys(s.Z).find(k=>s.Z[k].includes(u));
-export const find=(s,uid)=>all(s).find(u=>u.uid==uid);
-export function power(s,u){let e=u.eq.reduce((a,q)=>a+(D[q.id].power||0),0);if(u.id=='peach')e*=2;
+const all=(s,p)=>Object.values(s.Z).flat().filter(u=>p==null||u.owner==p);
+const where=(s,u)=>Object.keys(s.Z).find(k=>s.Z[k].includes(u));
+const find=(s,uid)=>all(s).find(u=>u.uid==uid);
+function power(s,u){let e=u.eq.reduce((a,q)=>a+(D[q.id].power||0),0);if(u.id=='peach')e*=2;
  let b=D[u.id].power+e+u.tmp;if(u.id=='mario'&&s.active!=u.owner)b+=2*u.eq.length;return b}
-export function cost(s,p,c){const d=D[c.id];let k=d.cost;
+function cost(s,p,c){const d=D[c.id];let k=d.cost;
  if(d.type=='action'&&d.fam.includes('Frère Mario')&&all(s,p).some(u=>u.id=='luigi'))k--;return Math.max(0,k)}
-export function newGame(deck,first=0){
+function newGame(deck,first=0){
  const s={uid:1,active:first,first,log:[],winner:null,combat:null,Z:{b0:[],b1:[],z0:[],z1:[]},L:[null,null],free:[false,false],P:[]};
  for(let p=0;p<2;p++){const cs=[];for(const[id,n]of Object.entries(deck.cards))for(let i=0;i<n;i++)cs.push(mk(s,id,p));
   s.P.push({deck:shuf(cs),hand:[],disc:[],pv:D[deck.trans].pv,res:p==first?1:2,used:0,conq:0,turns:0,trans:deck.trans})}
  draw(s,0,5);draw(s,1,5);start(s,first);return s}
 function draw(s,p,n){const P=s.P[p];while(n--&&P.deck.length)P.hand.push(P.deck.shift())}
-export function kill(s,u){const k=where(s,u);s.Z[k].splice(s.Z[k].indexOf(u),1);s.P[u.owner].disc.push(u,...u.eq);u.eq=[];log(s,`${D[u.id].name} (${nm(u.owner)}) est détruit`)}
+function kill(s,u){const k=where(s,u);s.Z[k].splice(s.Z[k].indexOf(u),1);s.P[u.owner].disc.push(u,...u.eq);u.eq=[];log(s,`${D[u.id].name} (${nm(u.owner)}) est détruit`)}
 function start(s,p){const P=s.P[p];P.turns++;if(P.turns>1)P.res=Math.min(10,P.res+2);P.used=0;
  all(s,p).forEach(u=>{u.tapped=false;u.mt=false});
  s.Z['b'+p].filter(u=>u.owner!=p).forEach(u=>kill(s,u));
@@ -37,7 +38,7 @@ function fx(s,p,c,f){if(!f)return;const P=s.P[p];if(f.draw)draw(s,p,f.draw);
   if(best){rm(top,best);if(f.equipTop)equip(s,c,best);else{P.hand.push(best);log(s,`${nm(p)} ajoute ${D[best.id].name} à sa main`)}}
   P.deck.push(...top)}
  if(f.moveBase){const u=all(s,p).find(x=>x.uid==f.mv);if(u&&where(s,u)!='b'+p){rm(s.Z[where(s,u)],u);s.Z['b'+p].push(u)}}}
-export function act(s0,a){const s=structuredClone(s0);const e=ap(s,a);return e?{s:s0,err:e}:{s}}
+function act(s0,a){const s=structuredClone(s0);const e=ap(s,a);return e?{s:s0,err:e}:{s}}
 function ap(s,a){
  if(s.winner!=null)return'Partie terminée';const p=a.p,P=s.P[p],c0=s.combat;
  if(a.t=='assign'){if(!c0||c0.done[p])return'Pas de combat';c0.map[p]=a.map||{};c0.done[p]=true;if(c0.done[0]&&c0.done[1])resolve(s);return}
@@ -70,3 +71,5 @@ function resolve(s){const c=s.combat,z=c.z,dm=new Map(),tr=[0,0];s.combat=null;
   if(t=='T'){if(z=='b'+(1-p))tr[1-p]+=w}else{const v=find(s,+t);if(v&&v.owner!=p&&where(s,v)==z)dm.set(v,(dm.get(v)||0)+w)}}
  [...dm].filter(([v,d])=>d>=power(s,v)).forEach(([v])=>kill(s,v));
  for(const q of[0,1])if(tr[q]){s.P[q].pv=Math.max(0,s.P[q].pv-tr[q]);log(s,`Le Transcendant de ${nm(q)} perd ${tr[q]} PV`);if(!s.P[q].pv)s.winner=1-q}}
+
+return{setDefs,defs,all,where,find,power,cost,newGame,kill,act}})();

@@ -1,11 +1,11 @@
-import {cost,power,all,where} from './engine.js';
-export function assign(s,p){const z=s.combat.z,mine=all(s,p).filter(u=>where(s,u)==z),m={};
+const AI=(()=>{const{cost,power,all,where}=E;
+function assign(s,p){const z=s.combat.z,mine=all(s,p).filter(u=>where(s,u)==z),m={};
  const left=all(s,1-p).filter(u=>where(s,u)==z).sort((a,b)=>power(s,b)-power(s,a));
  for(const u of mine.sort((a,b)=>power(s,b)-power(s,a))){
   if(z=='b'+(1-p)){m[u.uid]='T';continue}
   const t=left.find(v=>power(s,v)<=power(s,u))||left[left.length-1];if(t){m[u.uid]=t.uid;if(power(s,t)<=power(s,u))left.splice(left.indexOf(t),1)}}
  return m}
-export function next(s,p,D){
+function next(s,p,D){
  if(s.combat)return s.combat.done[p]?null:{t:'assign',p,map:assign(s,p)};
  if(s.active!=p)return null;const P=s.P[p],av=P.res-P.used,mine=all(s,p);
  for(const x of [...P.hand].sort((a,b)=>cost(s,p,b)-cost(s,p,a))){const d=D[x.id];if(d.react||cost(s,p,x)>av)continue;
@@ -17,3 +17,5 @@ export function next(s,p,D){
   if(w=='b'+p){const i=[1-p,p].find(i=>s.L[i]);if(i!=null)return{t:'move',p,uid:u.uid,to:'z'+i}}
   else if(w[0]=='z')return{t:'move',p,uid:u.uid,to:'b'+(1-p)}}
  return{t:'end',p}}
+
+return{assign,next}})();

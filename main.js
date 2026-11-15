@@ -1,5 +1,5 @@
-import * as E from './engine.js';import {next} from './ai.js';
-const D=await (await fetch('data/cards.json')).json(),deck=await (await fetch('data/deck.json')).json();E.setDefs(D);
+
+const D=CARDS,deck=DECK;E.setDefs(D);
 const $=id=>document.getElementById(id),W=['Toi','IA'];
 let s,sel=null,asg={},msg='';
 const img=id=>`assets/cards/${D[id].img}`;
@@ -17,9 +17,9 @@ function render(){const P=s.P[0],C=s.combat;
  $('msg').textContent=s.winner!=null?(s.winner==0?'Victoire !':'Défaite…'):msg||(mine?`Combat en ${C.z} : clique un de tes persos puis sa cible (ou le Transcendant), puis valide.`:s.active==0?'À toi de jouer.':'Tour de l\'IA…')}
 function go(a){const r=E.act(s,a);if(r.err){msg=r.err}else{s=r.s;msg='';sel=null;asg={}}step()}
 function step(){render();if(s.winner!=null)return;const C=s.combat;let a=null;
- if(C&&!C.done[1])a=next(s,1,D);
+ if(C&&!C.done[1])a=AI.next(s,1,D);
  else if(C&&!C.done[0]&&!s.Z[C.z].some(u=>u.owner==0))a={t:'assign',p:0,map:{}};
- else if(!C&&s.active==1)a=next(s,1,D)||{t:'end',p:1};
+ else if(!C&&s.active==1)a=AI.next(s,1,D)||{t:'end',p:1};
  if(!a)return;setTimeout(()=>{let r=E.act(s,a);if(r.err)r=E.act(s,a.t=='assign'?{...a,map:{}}:{t:'end',p:a.p});s=r.s;step()},450)}
 document.addEventListener('click',e=>{if(s.winner!=null)return;const t=e.target.closest('[data-h],[data-u],[data-t],[data-z]');if(!t)return;
  const C=s.combat,hand=s.P[0].hand;
